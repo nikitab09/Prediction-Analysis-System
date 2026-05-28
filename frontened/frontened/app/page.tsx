@@ -31,39 +31,46 @@ export default function HomePage() {
         </div>
 
         <div className="cards-row">
+
           {/* Motor Card — navigates to /motor/diagnostics */}
           <button className="machine-card motor-card" onClick={() => router.push('/motor/diagnostics')}>
             <div className="card-streak motor-streak" />
+
             <div className="card-top">
               <div className="card-icon-wrap motor-icon-bg">
                 <svg viewBox="0 0 64 64" className="card-icon" fill="none">
-                  <circle cx="32" cy="32" r="18" stroke="currentColor" strokeWidth="3"/>
-                  <circle cx="32" cy="32" r="8"  fill="currentColor" opacity="0.25"/>
-                  <circle cx="32" cy="32" r="3"  fill="currentColor"/>
-                  <line x1="32" y1="4"  x2="32" y2="14" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
-                  <line x1="32" y1="50" x2="32" y2="60" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
-                  <line x1="4"  y1="32" x2="14" y2="32" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
-                  <line x1="50" y1="32" x2="60" y2="32" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
-                  <line x1="11.5" y1="11.5" x2="18.5" y2="18.5" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
-                  <line x1="45.5" y1="45.5" x2="52.5" y2="52.5" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
-                  <line x1="52.5" y1="11.5" x2="45.5" y2="18.5" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
-                  <line x1="18.5" y1="45.5" x2="11.5" y2="52.5" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
+                  <circle cx="32" cy="32" r="18" stroke="currentColor" strokeWidth="3" />
+                  <circle cx="32" cy="32" r="8" fill="currentColor" opacity="0.25" />
+                  <circle cx="32" cy="32" r="3" fill="currentColor" />
+                  <line x1="32" y1="4" x2="32" y2="14" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+                  <line x1="32" y1="50" x2="32" y2="60" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+                  <line x1="4" y1="32" x2="14" y2="32" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+                  <line x1="50" y1="32" x2="60" y2="32" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+                  <line x1="11.5" y1="11.5" x2="18.5" y2="18.5" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+                  <line x1="45.5" y1="45.5" x2="52.5" y2="52.5" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+                  <line x1="52.5" y1="11.5" x2="45.5" y2="18.5" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+                  <line x1="18.5" y1="45.5" x2="11.5" y2="52.5" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
                 </svg>
               </div>
+
               <div className="card-label motor-label">MOTOR</div>
             </div>
+
             <div className="card-content">
               <h2 className="card-title">Motor Analysis</h2>
+
               <p className="card-desc">
                 Vibration &amp; current sensor analysis. Detect bearing faults,
                 winding failures, and rotor imbalance in real time.
               </p>
+
               <div className="card-features">
                 <span className="feature-tag motor-tag">Vibration Sensors</span>
                 <span className="feature-tag motor-tag">Current Analysis</span>
                 <span className="feature-tag motor-tag">Bearing Fault</span>
               </div>
             </div>
+
             <div className="card-footer motor-footer">
               <span>Run Diagnostics</span>
               <span className="arrow">→</span>
@@ -73,41 +80,132 @@ export default function HomePage() {
           {/* Divider */}
           <div className="cards-divider"><span>OR</span></div>
 
-          {/* Pump Card — navigates to /pump */}
-          <button className="machine-card pump-card" onClick={() => router.push('/pump')}>
+          {/* Pump Card — navigates to /pump/diagnostics */}
+          <button className="machine-card pump-card" onClick={() => router.push('/pump/diagnostics')}>
             <div className="card-streak pump-streak" />
+
             <div className="card-top">
               <div className="card-icon-wrap pump-icon-bg">
                 <svg viewBox="0 0 64 64" className="card-icon" fill="none">
-                  <rect x="8"  y="22" width="20" height="20" rx="4" stroke="currentColor" strokeWidth="3"/>
-                  <rect x="36" y="18" width="20" height="28" rx="4" stroke="currentColor" strokeWidth="3"/>
-                  <line x1="28" y1="32" x2="36" y2="32" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
-                  <path d="M18 22 C18 14 26 10 32 14" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" fill="none"/>
-                  <path d="M46 18 C46 10 54 10 56 18" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" fill="none"/>
-                  <circle cx="18" cy="32" r="3" fill="currentColor" opacity="0.4"/>
-                  <circle cx="46" cy="32" r="4" fill="currentColor" opacity="0.3"/>
+                  <rect x="8" y="22" width="20" height="20" rx="4" stroke="currentColor" strokeWidth="3" />
+                  <rect x="36" y="18" width="20" height="28" rx="4" stroke="currentColor" strokeWidth="3" />
+                  <line x1="28" y1="32" x2="36" y2="32" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+                  <path d="M18 22 C18 14 26 10 32 14" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+                  <path d="M46 18 C46 10 54 10 56 18" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+                  <circle cx="18" cy="32" r="3" fill="currentColor" opacity="0.4" />
+                  <circle cx="46" cy="32" r="4" fill="currentColor" opacity="0.3" />
                 </svg>
               </div>
+
               <div className="card-label pump-label">PUMP</div>
             </div>
+
             <div className="card-content">
               <h2 className="card-title">Pump Analysis</h2>
+
               <p className="card-desc">
                 52-sensor time-series analysis. Classify Normal, Broken, and
                 Recovering pump states using SMOTE-balanced ML models.
               </p>
+
               <div className="card-features">
                 <span className="feature-tag pump-tag">52 Sensors</span>
                 <span className="feature-tag pump-tag">SMOTE Balanced</span>
                 <span className="feature-tag pump-tag">3-Class State</span>
               </div>
             </div>
+
             <div className="card-footer pump-footer">
               <span>Run Diagnostics</span>
               <span className="arrow">→</span>
             </div>
           </button>
+
+          {/* Divider */}
+          <div className="cards-divider"><span>OR</span></div>
+
+          {/* Compressor Card — navigates to /compressor/diagnostics */}
+          <button className="machine-card compressor-card" onClick={() => router.push('/compressor/diagnostics')}>
+            <div className="card-streak compressor-streak" />
+
+            <div className="card-top">
+              <div className="card-icon-wrap compressor-icon-bg">
+                <svg viewBox="0 0 64 64" className="card-icon" fill="none">
+                  <circle cx="32" cy="32" r="18" stroke="currentColor" strokeWidth="3" />
+                  <path d="M20 32 L32 20 L44 32" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+                  <path d="M20 32 L32 44 L44 32" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+                </svg>
+              </div>
+
+              <div className="card-label compressor-label">COMPRESSOR</div>
+            </div>
+
+            <div className="card-content">
+              <h2 className="card-title">Compressor Analysis</h2>
+
+              <p className="card-desc">
+                Analyze compressor RPM, airflow, outlet pressure, vibration,
+                and bearing health using AI-based fault prediction.
+              </p>
+
+              <div className="card-features">
+                <span className="feature-tag compressor-tag">Air Flow</span>
+                <span className="feature-tag compressor-tag">Pressure</span>
+                <span className="feature-tag compressor-tag">Bearing Health</span>
+              </div>
+            </div>
+
+            <div className="card-footer compressor-footer">
+              <span>Run Diagnostics</span>
+              <span className="arrow">→</span>
+            </div>
+          </button>
+
+          {/* Divider */}
+          <div className="cards-divider"><span>OR</span></div>
+
+          {/* Turbine Card — navigates to /turbine/diagnostics */}
+          <button className="machine-card turbine-card" onClick={() => router.push('/turbine/diagnostics')}>
+            <div className="card-streak turbine-streak" />
+
+            <div className="card-top">
+              <div className="card-icon-wrap turbine-icon-bg">
+                <svg viewBox="0 0 64 64" className="card-icon" fill="none">
+                  <circle cx="32" cy="32" r="16" stroke="currentColor" strokeWidth="3" />
+                  <path
+                    d="M32 12 L38 28 L52 32 L38 36 L32 52 L26 36 L12 32 L26 28 Z"
+                    fill="currentColor"
+                    opacity="0.35"
+                  />
+                </svg>
+              </div>
+
+              <div className="card-label turbine-label">TURBINE</div>
+            </div>
+
+            <div className="card-content">
+              <h2 className="card-title">Turbine Analysis</h2>
+
+              <p className="card-desc">
+                Monitor turbine temperature, vibration, pressure,
+                RPM and power output for predictive maintenance.
+              </p>
+
+              <div className="card-features">
+                <span className="feature-tag turbine-tag">Thermal Analysis</span>
+                <span className="feature-tag turbine-tag">Power Output</span>
+                <span className="feature-tag turbine-tag">Vibration</span>
+              </div>
+            </div>
+
+            <div className="card-footer turbine-footer">
+              <span>Run Diagnostics</span>
+              <span className="arrow">→</span>
+            </div>
+          </button>
+
         </div>
+
 
         <p className="selector-footer">
           Models trained on real industrial sensor datasets &nbsp;·&nbsp; Binary &amp; multi-class classification
@@ -156,7 +254,7 @@ export default function HomePage() {
 
         .selector-container {
           position: relative;
-          max-width: 980px;
+          max-width: 1600px;
           width: 100%;
           padding: 56px 24px;
           display: flex;
@@ -244,6 +342,74 @@ export default function HomePage() {
         .cards-divider span { font-family: 'Rajdhani', sans-serif; font-size: 0.65rem; font-weight: 700; letter-spacing: 2.5px; color: #2a3450; background: #04091a; padding: 8px 10px; border: 1px solid #141e35; border-radius: 8px; }
 
         .selector-footer { font-family: 'Rajdhani', sans-serif; font-size: 0.7rem; font-weight: 500; color: #2a3450; letter-spacing: 1px; }
+
+
+.compressor-streak {
+  background: linear-gradient(90deg, #06b6d4, rgba(6,182,212,0.2));
+}
+
+.turbine-streak {
+  background: linear-gradient(90deg, #f59e0b, rgba(245,158,11,0.2));
+}
+
+.compressor-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(6,182,212,0.4);
+  background: rgba(6,182,212,0.05);
+  box-shadow: 0 20px 60px rgba(6,182,212,0.15);
+}
+
+.turbine-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(245,158,11,0.4);
+  background: rgba(245,158,11,0.05);
+  box-shadow: 0 20px 60px rgba(245,158,11,0.15);
+}
+
+.compressor-icon-bg {
+  background: rgba(6,182,212,0.15);
+  color: #22d3ee;
+}
+
+.turbine-icon-bg {
+  background: rgba(245,158,11,0.15);
+  color: #fbbf24;
+}
+
+.compressor-label {
+  background: rgba(6,182,212,0.12);
+  color: #22d3ee;
+  border: 1px solid rgba(6,182,212,0.25);
+}
+
+.turbine-label {
+  background: rgba(245,158,11,0.12);
+  color: #fbbf24;
+  border: 1px solid rgba(245,158,11,0.25);
+}
+
+.compressor-tag {
+  background: rgba(6,182,212,0.08);
+  border: 1px solid rgba(6,182,212,0.2);
+  color: #22d3ee;
+}
+
+.turbine-tag {
+  background: rgba(245,158,11,0.08);
+  border: 1px solid rgba(245,158,11,0.2);
+  color: #fbbf24;
+}
+
+.compressor-footer {
+  color: #22d3ee;
+}
+
+.turbine-footer {
+  color: #fbbf24;
+}
+
+
+
 
         @media (max-width: 640px) {
           .cards-row { flex-direction: column; }
