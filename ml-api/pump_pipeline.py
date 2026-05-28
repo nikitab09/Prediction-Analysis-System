@@ -172,6 +172,8 @@ key_sensors = [
     "sensor_05", "sensor_06", "sensor_07", "sensor_08",
     "sensor_09", "sensor_10", "sensor_11", "sensor_12",
 ]
+
+
 key_sensors = [s for s in key_sensors if s in df.columns]
  
 def add_rolling_features(data, window, sensors):

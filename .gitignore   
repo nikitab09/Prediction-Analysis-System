@@ -1,5 +1,4 @@
 node_modules/
 ml-api/pump_sensor.csv
 ml-api/compressor.csv
-ml-api/compressor_model.pklml-api/compressor.csv
 ml-api/compressor_model.pkl
