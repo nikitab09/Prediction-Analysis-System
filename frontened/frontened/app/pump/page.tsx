@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { Send, Minus, ArrowLeft, Activity } from 'lucide-react'
 
 // ── API URLs — change these to your real endpoints ──────────────────────────
-const PUMP_API_URL  = process.env.NEXT_PUBLIC_PUMP_API_URL  ?? 'http://127.0.0.1:5000/predict/pump'
+const PUMP_API_URL  = process.env.NEXT_PUBLIC_PUMP_API_URL  ?? 'http://127.0.0.1:5050/predict/pump'
 const PUMP_SAVE_URL = process.env.NEXT_PUBLIC_PUMP_SAVE_URL ?? 'http://127.0.0.1/nextjsbackend/save_pump_prediction.php'
 
 type PumpResult = {

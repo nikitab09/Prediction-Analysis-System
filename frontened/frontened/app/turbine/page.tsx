@@ -1,10 +1,11 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Send, Minus, ArrowLeft, Zap } from 'lucide-react'
 import { pageStyles } from '../pump/page'
 
-const TURBINE_API_URL  = process.env.NEXT_PUBLIC_TURBINE_API_URL  ?? 'http://127.0.0.1:5000/predict/turbine'
+const TURBINE_API_URL  = process.env.NEXT_PUBLIC_TURBINE_API_URL  ?? 'http://127.0.0.1:5050/predict/turbine'
 const TURBINE_SAVE_URL = process.env.NEXT_PUBLIC_TURBINE_SAVE_URL ?? 'http://127.0.0.1/nextjsbackend/save_turbine_prediction.php'
 
 type TurbineResult = {
@@ -14,9 +15,7 @@ type TurbineResult = {
   recommendation: string
 }
 
-type Props = { onBack: () => void }
-
-export default function TurbinePage({ onBack }: Props) {
+export default function TurbinePage() {
   const [inputs, setInputs]   = useState<Record<string, string>>({})
   const [result, setResult]   = useState<TurbineResult | null>(null)
   const [loading, setLoading] = useState(false)

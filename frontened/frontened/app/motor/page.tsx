@@ -5,7 +5,7 @@ import { Send, Minus, ArrowLeft, Zap } from 'lucide-react'
 import { pageStyles } from '../pump/page'
 
 // ── API URLs — change these to your real endpoints ──────────────────────────
-const MOTOR_API_URL  = process.env.NEXT_PUBLIC_MOTOR_API_URL  ?? 'http://127.0.0.1:5000/predict/motor'
+const MOTOR_API_URL  = process.env.NEXT_PUBLIC_MOTOR_API_URL  ?? 'http://127.0.0.1:5050/predict/motor'
 const MOTOR_SAVE_URL = process.env.NEXT_PUBLIC_MOTOR_SAVE_URL ?? 'http://127.0.0.1/nextjsbackend/save_motor_prediction.php'
 
 type MotorResult = {

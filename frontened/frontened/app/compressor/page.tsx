@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { Send, Minus, ArrowLeft, Wind } from 'lucide-react'
 import { pageStyles } from '../pump/page'
 
-const COMPRESSOR_API_URL  = process.env.NEXT_PUBLIC_COMPRESSOR_API_URL  ?? 'http://127.0.0.1:5000/predict/compressor'
+const COMPRESSOR_API_URL  = process.env.NEXT_PUBLIC_COMPRESSOR_API_URL  ?? 'http://127.0.0.1:5050/predict/compressor'
 const COMPRESSOR_SAVE_URL = process.env.NEXT_PUBLIC_COMPRESSOR_SAVE_URL ?? 'http://127.0.0.1/nextjsbackend/save_compressor_prediction.php'
 
 type CompressorResult = {

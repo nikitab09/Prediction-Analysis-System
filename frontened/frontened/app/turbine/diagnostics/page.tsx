@@ -231,11 +231,10 @@ function ActionCard({
           : "rgba(255,255,255,0.025)",
         borderRadius: 20,
         padding: 0,
-        border: `1px solid ${
-          hovered
+        border: `1px solid ${hovered
             ? `rgba(${accentBg}, 0.35)`
             : "rgba(255,255,255,0.07)"
-        }`,
+          }`,
         cursor: "pointer",
         textAlign: "left",
         display: "flex",
@@ -373,10 +372,10 @@ export default function TurbineDiagnostics() {
     filter === "All"
       ? true
       : filter === "Critical"
-      ? t.status === "FAULT"
-      : filter === "At risk"
-      ? t.status === "DEGRADED"
-      : true
+        ? t.status === "FAULT"
+        : filter === "At risk"
+          ? t.status === "DEGRADED"
+          : true
   );
 
   const tabs = ["All", "Critical", "At risk"];
@@ -659,7 +658,7 @@ export default function TurbineDiagnostics() {
             >
               <button
                 className="diag-back-btn"
-                onClick={() => setView("dashboard")}
+                onClick={() => router.push("/")}
               >
                 ← Back
               </button>
@@ -681,9 +680,8 @@ export default function TurbineDiagnostics() {
               {tabs.map((t) => (
                 <button
                   key={t}
-                  className={`filter-tab ${
-                    filter === t ? "active" : ""
-                  }`}
+                  className={`filter-tab ${filter === t ? "active" : ""
+                    }`}
                   onClick={() => setFilter(t)}
                 >
                   {t}

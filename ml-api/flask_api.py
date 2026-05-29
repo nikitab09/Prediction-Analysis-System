@@ -289,6 +289,7 @@ def predict_pump():
         return jsonify({"error": str(e)}), 500
 
 
+
 @app.route("/predict/compressor", methods=["POST"])
 def predict_compressor():
     if compressor_model is None:
@@ -297,34 +298,81 @@ def predict_compressor():
     data = request.get_json() or {}
 
     try:
+        # ─────────────────────────────────────────────
+        # ORIGINAL INPUT ROW
+        # ─────────────────────────────────────────────
         row = pd.DataFrame([data])
 
-        # If feature order exists, align it (safe fallback)
-        if hasattr(compressor_model, "feature_names_in_"):
-            features = compressor_model.feature_names_in_
-            for col in features:
-                if col not in row.columns:
-                    row[col] = 0
-            row = row[features]
+        # convert all to numeric
+        for col in row.columns:
+            row[col] = pd.to_numeric(row[col], errors="coerce").fillna(0)
 
-        row_sc = compressor_scaler.transform(row)
+        # ─────────────────────────────────────────────
+        # RECREATE ROLLING FEATURES
+        # (same logic as training pipeline)
+        # ─────────────────────────────────────────────
+        engineered = row.copy()
 
-        prob = compressor_model.predict_proba(row_sc)[0][1]
+        original_cols = list(row.columns)
+
+        for col in original_cols:
+            engineered[f"{col}_mean"] = row[col]
+            engineered[f"{col}_std"] = 0
+            engineered[f"{col}_max"] = row[col]
+
+        # ─────────────────────────────────────────────
+        # ENSURE EXACT FEATURE ORDER
+        # ─────────────────────────────────────────────
+        for feature in compressor_features:
+            if feature not in engineered.columns:
+                engineered[feature] = 0
+
+        engineered = engineered[compressor_features]
+
+        # ─────────────────────────────────────────────
+        # SCALE
+        # ─────────────────────────────────────────────
+        row_sc = compressor_scaler.transform(engineered)
+
+        # ─────────────────────────────────────────────
+        # PREDICT
+        # ─────────────────────────────────────────────
+        prob = float(compressor_model.predict_proba(row_sc)[0][1])
         label = int(compressor_model.predict(row_sc)[0])
 
-        status = "ABNORMAL" if label == 1 else "NORMAL"
-        risk = "High" if prob > 0.7 else "Medium" if prob > 0.3 else "Low"
+        # ─────────────────────────────────────────────
+        # STATUS
+        # ─────────────────────────────────────────────
+        if label == 0:
+            status = "NORMAL"
+            risk = "Low"
+            recommendation = "Compressor operating normally."
+            confidence = round((1 - prob) * 100, 2)
+
+        else:
+            confidence = round(prob * 100, 2)
+
+            if prob > 0.8:
+                status = "FAULT"
+                risk = "High"
+                recommendation = "⚠️ Immediate compressor inspection required."
+
+            else:
+                status = "DEGRADED"
+                risk = "Medium"
+                recommendation = "Performance degradation detected. Schedule maintenance."
 
         return jsonify({
             "status": status,
-            "confidence": round(prob * 100, 2),
+            "confidence": confidence,
             "risk_level": risk,
             "failure_probability": round(prob, 4),
-            "recommendation": "Inspect compressor immediately" if label == 1 else "Compressor operating normally"
+            "recommendation": recommendation
         })
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
 
 
 
@@ -376,12 +424,9 @@ def predict_turbine():
 # RUN
 # ══════════════════════════════════════════════════════════════════════════════
 
-# ══════════════════════════════════════════════════════════════════════════════
-# RUN
-# ══════════════════════════════════════════════════════════════════════════════
 
 if __name__ == "__main__":
-    PORT = 5001   # ✅ changed from 5000 to avoid "port already in use"
+    PORT = 5050  # ✅ changed from 5000 to avoid "port already in use"
 
     print("\n" + "="*55)
     print("  Fault Detection API — Motor + Pump + Compressor + Turbine")
