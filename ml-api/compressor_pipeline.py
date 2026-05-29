@@ -231,6 +231,7 @@ plt.close()
 # ─────────────────────────────────────────────────────────────
 joblib.dump(best["model"], "compressor_model.pkl")
 joblib.dump(scaler, "compressor_scaler.pkl")
+joblib.dump(X_train.columns.tolist(), "compressor_feature_names.pkl")
 
 print("\nDONE ✔")
 print("Best Model:", best_name)

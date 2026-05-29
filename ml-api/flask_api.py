@@ -51,17 +51,43 @@ except Exception as e:
     print(f"  ❌ Pump model load failed: {e}")
     pump_model = None
 
+print("Loading compressor model...")
+try:
+    compressor_model  = joblib.load("compressor_model.pkl")
+    compressor_scaler = joblib.load("compressor_scaler.pkl")
+    compressor_features = joblib.load("compressor_feature_names.pkl")
+    print("  ✅ Compressor model loaded")
+except Exception as e:
+    print("  ❌ Compressor model failed:", e)
+    compressor_model = None
+
+
+print("Loading turbine model...")
+
+turbine_model = None
+turbine_scaler = None
+turbine_features = None
+
+try:
+    turbine_model    = joblib.load("turbine_model.pkl")
+    turbine_scaler   = joblib.load("turbine_scaler.pkl")
+    turbine_features = joblib.load("turbine_features.pkl")
+
+    print("  ✅ Turbine model loaded")
+except Exception as e:
+    print(f"  ❌ Turbine model load failed: {e}")
 
 # ══════════════════════════════════════════════════════════════════════════════
 # HEALTH CHECK
 # ══════════════════════════════════════════════════════════════════════════════
-
 @app.route("/health", methods=["GET"])
 def health():
     return jsonify({
         "status": "ok",
         "motor_model_loaded": motor_model is not None,
-        "pump_model_loaded":  pump_model  is not None,
+        "pump_model_loaded": pump_model is not None,
+        "compressor_model_loaded": compressor_model is not None,
+        "turbine_model_loaded": turbine_model is not None,
     })
 
 
@@ -263,15 +289,109 @@ def predict_pump():
         return jsonify({"error": str(e)}), 500
 
 
+@app.route("/predict/compressor", methods=["POST"])
+def predict_compressor():
+    if compressor_model is None:
+        return jsonify({"error": "Compressor model not loaded"}), 500
+
+    data = request.get_json() or {}
+
+    try:
+        row = pd.DataFrame([data])
+
+        # If feature order exists, align it (safe fallback)
+        if hasattr(compressor_model, "feature_names_in_"):
+            features = compressor_model.feature_names_in_
+            for col in features:
+                if col not in row.columns:
+                    row[col] = 0
+            row = row[features]
+
+        row_sc = compressor_scaler.transform(row)
+
+        prob = compressor_model.predict_proba(row_sc)[0][1]
+        label = int(compressor_model.predict(row_sc)[0])
+
+        status = "ABNORMAL" if label == 1 else "NORMAL"
+        risk = "High" if prob > 0.7 else "Medium" if prob > 0.3 else "Low"
+
+        return jsonify({
+            "status": status,
+            "confidence": round(prob * 100, 2),
+            "risk_level": risk,
+            "failure_probability": round(prob, 4),
+            "recommendation": "Inspect compressor immediately" if label == 1 else "Compressor operating normally"
+        })
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+
+
+@app.route("/predict/turbine", methods=["POST"])
+def predict_turbine():
+    if turbine_model is None:
+        return jsonify({"error": "Turbine model not loaded"}), 500
+
+    data = request.get_json() or {}
+
+    try:
+        row = pd.DataFrame([data])
+
+        # enforce correct feature order
+        if turbine_features is not None:
+            for col in turbine_features:
+                if col not in row.columns:
+                    row[col] = 0
+            row = row[turbine_features]
+
+        row_sc = turbine_scaler.transform(row)
+
+        prob = turbine_model.predict_proba(row_sc)[0][1]
+        label = int(turbine_model.predict(row_sc)[0])
+
+        status = "FAULT" if label == 1 else "NORMAL"
+        risk = "High" if prob > 0.7 else "Medium" if prob > 0.3 else "Low"
+
+        return jsonify({
+            "status": status,
+            "confidence": round(prob * 100, 2),
+            "risk_level": risk,
+            "failure_probability": round(prob, 4),
+            "recommendation": (
+                "⚠️ Immediate turbine shutdown required"
+                if label == 1 else
+                "Turbine operating normally"
+            )
+        })
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+
+    
+
+# ══════════════════════════════════════════════════════════════════════════════
+# RUN
+# ══════════════════════════════════════════════════════════════════════════════
+
 # ══════════════════════════════════════════════════════════════════════════════
 # RUN
 # ══════════════════════════════════════════════════════════════════════════════
 
 if __name__ == "__main__":
+    PORT = 5001   # ✅ changed from 5000 to avoid "port already in use"
+
     print("\n" + "="*55)
-    print("  Fault Detection API — Motor + Pump")
-    print("  Motor endpoint : POST http://127.0.0.1:5000/predict/motor")
-    print("  Pump  endpoint : POST http://127.0.0.1:5000/predict/pump")
-    print("  Health check   : GET  http://127.0.0.1:5000/health")
+    print("  Fault Detection API — Motor + Pump + Compressor + Turbine")
+    print(f"  Base URL: http://127.0.0.1:{PORT}")
+    print()
+    print(f"  Motor endpoint      : POST http://127.0.0.1:{PORT}/predict/motor")
+    print(f"  Pump endpoint       : POST http://127.0.0.1:{PORT}/predict/pump")
+    print(f"  Compressor endpoint  : POST http://127.0.0.1:{PORT}/predict/compressor")
+    print(f"  Turbine endpoint    : POST http://127.0.0.1:{PORT}/predict/turbine")
+    print(f"  Health check        : GET  http://127.0.0.1:{PORT}/health")
     print("="*55 + "\n")
-    app.run(host="0.0.0.0", port=5000, debug=True)
+
+    app.run(host="0.0.0.0", port=PORT, debug=True)
