@@ -1,0 +1,15 @@
+# Dataset files
+*.csv
+
+# ML models
+*.pkl
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Node modules
+node_modules/
+
+# Next build
+.next/
