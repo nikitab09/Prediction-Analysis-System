@@ -22,6 +22,9 @@ export default function TurbinePage() {
   const [error, setError]     = useState<string | null>(null)
   const [saved, setSaved]     = useState<string | null>(null)
 
+  const router = useRouter()
+  const onBack = () => router.back()
+
   const fields = [
     { key: 'rpm',          label: 'RPM',            placeholder: 'e.g. 3000'  },
     { key: 'temperature',  label: 'Temperature (K)', placeholder: 'e.g. 850'  },

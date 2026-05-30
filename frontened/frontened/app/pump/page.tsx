@@ -274,10 +274,29 @@ export function pageStyles(type: 'pump' | 'motor') {
       color: #fff;
     }
     .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-    .pump-btn  { background: linear-gradient(135deg, #059669, #10b981); }
-    .motor-btn { background: linear-gradient(135deg, #1d4ed8, #3b82f6); }
-    .pump-btn:hover:not(:disabled)  { filter: brightness(1.1); transform: translateY(-1px); }
-    .motor-btn:hover:not(:disabled) { filter: brightness(1.1); transform: translateY(-1px); }
+    .pump-btn {
+    background: linear-gradient(135deg, #059669, #10b981);
+}
+
+.motor-btn {
+    background: linear-gradient(135deg, #1d4ed8, #3b82f6);
+}
+
+.compressor-btn {
+    background: linear-gradient(135deg, #078c96, #35d0d6);
+}
+
+.turbine-btn {
+    background: linear-gradient(135deg, #7c3aed, #a855f7);
+}
+
+.pump-btn:hover:not(:disabled),
+.motor-btn:hover:not(:disabled),
+.compressor-btn:hover:not(:disabled),
+.turbine-btn:hover:not(:disabled) {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+}
     .spin { display: inline-block; animation: spin 1s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
     .result-status-row { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; margin-bottom: 16px; }

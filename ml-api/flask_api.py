@@ -21,6 +21,8 @@ import numpy as np
 import pandas as pd
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from db import db, cursor
+import json
 
 app = Flask(__name__)
 CORS(app)   # allow requests from your Next.js frontend (localhost:3000)
@@ -193,6 +195,20 @@ def predict_motor():
             "Low":    "Minor anomaly detected. Inspect at next scheduled downtime.",
         }.get(risk_level, "Inspect machine.")
 
+        cursor.execute("""
+        INSERT INTO motor_predictions
+        (prediction, confidence, risk_level, input_data)
+        VALUES (%s, %s, %s, %s)
+        """,
+        (
+        status,
+        confidence,
+        risk_level,
+        json.dumps(data)
+        ))
+
+        db.commit()
+
         return jsonify({
             "status":          status,
             "confidence":      confidence,
@@ -276,6 +292,23 @@ def predict_pump():
                 if status == "BROKEN"
                 else "Pump in recovery/degraded state. Schedule inspection soon."
             )
+        
+
+        cursor.execute("""
+INSERT INTO pump_predictions
+(prediction, confidence, risk_level, input_data)
+VALUES (%s, %s, %s, %s)
+""",
+(
+    status,
+    confidence,
+    risk_level,
+    json.dumps(data)
+))
+
+        db.commit()
+
+
 
         return jsonify({
             "status":              status,
@@ -361,6 +394,21 @@ def predict_compressor():
                 status = "DEGRADED"
                 risk = "Medium"
                 recommendation = "Performance degradation detected. Schedule maintenance."
+        
+        cursor.execute("""
+INSERT INTO compressor_predictions
+(prediction, confidence, risk_level, input_data)
+VALUES (%s, %s, %s, %s)
+""",
+(
+    status,
+    confidence,
+    risk,
+    json.dumps(data)
+))
+
+        db.commit()
+
 
         return jsonify({
             "status": status,
@@ -401,6 +449,22 @@ def predict_turbine():
 
         status = "FAULT" if label == 1 else "NORMAL"
         risk = "High" if prob > 0.7 else "Medium" if prob > 0.3 else "Low"
+        
+
+        cursor.execute("""
+INSERT INTO turbine_predictions
+(prediction, confidence, risk_level, input_data)
+VALUES (%s, %s, %s, %s)
+""",
+(
+    status,
+    round(prob * 100, 2),
+    risk,
+    json.dumps(data)
+))
+
+        db.commit()
+
 
         return jsonify({
             "status": status,
