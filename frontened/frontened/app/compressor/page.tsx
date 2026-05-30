@@ -1,10 +1,11 @@
 'use client'
 
 import { useState } from 'react'
-import { Send, Minus, ArrowLeft, Wind } from 'lucide-react'
+import { Send, Minus, ArrowLeft, Wind, LinkIcon } from 'lucide-react'
 import { pageStyles } from '../pump/page'
+import Link from "next/link";
 
-const COMPRESSOR_API_URL  = process.env.NEXT_PUBLIC_COMPRESSOR_API_URL  ?? 'http://127.0.0.1:5050/predict/compressor'
+const COMPRESSOR_API_URL = process.env.NEXT_PUBLIC_COMPRESSOR_API_URL ?? 'http://127.0.0.1:5050/predict/compressor'
 const COMPRESSOR_SAVE_URL = process.env.NEXT_PUBLIC_COMPRESSOR_SAVE_URL ?? 'http://127.0.0.1/nextjsbackend/save_compressor_prediction.php'
 
 type CompressorResult = {
@@ -17,27 +18,27 @@ type CompressorResult = {
 type Props = { onBack: () => void }
 
 export default function CompressorPage({ onBack }: Props) {
-  const [inputs, setInputs]   = useState<Record<string, string>>({})
-  const [result, setResult]   = useState<CompressorResult | null>(null)
+  const [inputs, setInputs] = useState<Record<string, string>>({})
+  const [result, setResult] = useState<CompressorResult | null>(null)
   const [loading, setLoading] = useState(false)
-  const [error, setError]     = useState<string | null>(null)
-  const [saved, setSaved]     = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
+  const [saved, setSaved] = useState<string | null>(null)
 
   const fields = [
-    { key: 'rpm',                 label: 'RPM',                   placeholder: 'e.g. 2950' },
-    { key: 'motor_power',         label: 'Motor Power',           placeholder: 'e.g. 15.4' },
-    { key: 'torque',              label: 'Torque',                placeholder: 'e.g. 48.2' },
-    { key: 'outlet_pressure_bar', label: 'Outlet Pressure (bar)', placeholder: 'e.g. 7.5'  },
-    { key: 'air_flow',            label: 'Air Flow',              placeholder: 'e.g. 320'  },
-    { key: 'noise_db',            label: 'Noise (dB)',            placeholder: 'e.g. 72'   },
-    { key: 'outlet_temp',         label: 'Outlet Temp',           placeholder: 'e.g. 85'   },
-    { key: 'gaccx',               label: 'Accel X (G)',           placeholder: 'e.g. 0.12' },
-    { key: 'gaccy',               label: 'Accel Y (G)',           placeholder: 'e.g. 0.09' },
-    { key: 'gaccz',               label: 'Accel Z (G)',           placeholder: 'e.g. 0.15' },
-    { key: 'haccx',               label: 'H-Accel X',             placeholder: 'e.g. 0.04' },
-    { key: 'haccy',               label: 'H-Accel Y',             placeholder: 'e.g. 0.06' },
-    { key: 'haccz',               label: 'H-Accel Z',             placeholder: 'e.g. 0.03' },
-    { key: 'bearings',            label: 'Bearings',              placeholder: 'e.g. 0.21' },
+    { key: 'rpm', label: 'RPM', placeholder: 'e.g. 2950' },
+    { key: 'motor_power', label: 'Motor Power', placeholder: 'e.g. 15.4' },
+    { key: 'torque', label: 'Torque', placeholder: 'e.g. 48.2' },
+    { key: 'outlet_pressure_bar', label: 'Outlet Pressure (bar)', placeholder: 'e.g. 7.5' },
+    { key: 'air_flow', label: 'Air Flow', placeholder: 'e.g. 320' },
+    { key: 'noise_db', label: 'Noise (dB)', placeholder: 'e.g. 72' },
+    { key: 'outlet_temp', label: 'Outlet Temp', placeholder: 'e.g. 85' },
+    { key: 'gaccx', label: 'Accel X (G)', placeholder: 'e.g. 0.12' },
+    { key: 'gaccy', label: 'Accel Y (G)', placeholder: 'e.g. 0.09' },
+    { key: 'gaccz', label: 'Accel Z (G)', placeholder: 'e.g. 0.15' },
+    { key: 'haccx', label: 'H-Accel X', placeholder: 'e.g. 0.04' },
+    { key: 'haccy', label: 'H-Accel Y', placeholder: 'e.g. 0.06' },
+    { key: 'haccz', label: 'H-Accel Z', placeholder: 'e.g. 0.03' },
+    { key: 'bearings', label: 'Bearings', placeholder: 'e.g. 0.21' },
   ]
 
   const handleChange = (key: string, val: string) =>
@@ -73,12 +74,12 @@ export default function CompressorPage({ onBack }: Props) {
   }
 
   const statusColor =
-    result?.status === 'NORMAL'   ? '#10b981' :
-    result?.status === 'DEGRADED' ? '#f59e0b' : '#ef4444'
+    result?.status === 'NORMAL' ? '#10b981' :
+      result?.status === 'DEGRADED' ? '#f59e0b' : '#ef4444'
 
   const statusBg =
-    result?.status === 'NORMAL'   ? 'rgba(16,185,129,0.1)' :
-    result?.status === 'DEGRADED' ? 'rgba(245,158,11,0.1)' : 'rgba(239,68,68,0.1)'
+    result?.status === 'NORMAL' ? 'rgba(16,185,129,0.1)' :
+      result?.status === 'DEGRADED' ? 'rgba(245,158,11,0.1)' : 'rgba(239,68,68,0.1)'
 
   return (
     <main className="page-root">
@@ -133,6 +134,30 @@ export default function CompressorPage({ onBack }: Props) {
             </button>
           </form>
         </div>
+        
+        <div
+    style={{
+      textAlign: 'center',
+      marginTop: '20px',
+      marginBottom: '30px'
+    }}
+  >
+    <Link
+      href="/compressor/history"
+      style={{
+        color: '#60a5fa',
+        textDecoration: 'none',
+        fontSize: '15px',
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: '8px'
+      }}
+    >
+      <LinkIcon size={16} />
+      View Prediction History →
+    </Link>
+  </div>
+        
 
         {/* Result */}
         {result && (
@@ -163,6 +188,30 @@ export default function CompressorPage({ onBack }: Props) {
             </div>
           </div>
         )}
+        {result && (
+  <div
+    style={{
+      textAlign: 'center',
+      marginTop: '20px',
+      marginBottom: '30px'
+    }}
+  >
+    <Link
+      href="/compressor/history"
+      style={{
+        color: '#60a5fa',
+        textDecoration: 'none',
+        fontSize: '15px',
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: '8px'
+      }}
+    >
+      <LinkIcon size={16} />
+      View Prediction History →
+    </Link>
+  </div>
+)}
       </div>
 
       <style>{pageStyles('compressor')}</style>

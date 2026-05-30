@@ -1,11 +1,15 @@
 'use client'
 
 import { useState } from 'react'
-import { Send, Minus, ArrowLeft, Activity } from 'lucide-react'
+import Link from 'next/link'
+import { Send, Minus, ArrowLeft, Activity, LinkIcon } from 'lucide-react'
 
-// ── API URLs — change these to your real endpoints ──────────────────────────
-const PUMP_API_URL  = process.env.NEXT_PUBLIC_PUMP_API_URL  ?? 'http://127.0.0.1:5050/predict/pump'
-const PUMP_SAVE_URL = process.env.NEXT_PUBLIC_PUMP_SAVE_URL ?? 'http://127.0.0.1/nextjsbackend/save_pump_prediction.php'
+// ── API URLs ─────────────────────────────────────────────
+const PUMP_API_URL =
+  process.env.NEXT_PUBLIC_PUMP_API_URL ?? 'http://127.0.0.1:5050/predict/pump'
+
+const PUMP_SAVE_URL =
+  process.env.NEXT_PUBLIC_PUMP_SAVE_URL ?? 'http://127.0.0.1/nextjsbackend/save_pump_prediction.php'
 
 type PumpResult = {
   status: 'NORMAL' | 'BROKEN' | 'RECOVERING'
@@ -18,12 +22,11 @@ type Props = { onBack: () => void }
 
 export default function PumpPage({ onBack }: Props) {
   const [sensors, setSensors] = useState<Record<string, string>>({})
-  const [result, setResult]   = useState<PumpResult | null>(null)
+  const [result, setResult] = useState<PumpResult | null>(null)
   const [loading, setLoading] = useState(false)
-  const [error, setError]     = useState<string | null>(null)
-  const [saved, setSaved]     = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
+  const [saved, setSaved] = useState<string | null>(null)
 
-  // Key sensors the model uses most
   const sensorFields = [
     { key: 'sensor_00', label: 'Sensor 00', placeholder: 'e.g. 2.45' },
     { key: 'sensor_02', label: 'Sensor 02', placeholder: 'e.g. 47.3' },
@@ -39,13 +42,15 @@ export default function PumpPage({ onBack }: Props) {
     { key: 'sensor_12', label: 'Sensor 12', placeholder: 'e.g. 4.01' },
   ]
 
-  const handleChange = (key: string, val: string) => {
+  const handleChange = (key: string, val: string) =>
     setSensors(prev => ({ ...prev, [key]: val }))
-  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setLoading(true); setError(null); setResult(null); setSaved(null)
+    setLoading(true)
+    setError(null)
+    setResult(null)
+    setSaved(null)
 
     try {
       const res = await fetch(PUMP_API_URL, {
@@ -53,32 +58,44 @@ export default function PumpPage({ onBack }: Props) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(sensors),
       })
+
       const data = await res.json()
       if (!res.ok) throw new Error(data?.error || `API error ${res.status}`)
+
       setResult(data)
 
-      // Try saving
       try {
         const saveRes = await fetch(PUMP_SAVE_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ ...sensors, ...data }),
         })
+
         const saveData = await saveRes.json()
         setSaved(saveData?.success ? 'Result saved to database.' : 'Shown but not saved.')
-      } catch { setSaved('Prediction shown, but saving failed.') }
-
+      } catch {
+        setSaved('Prediction shown, but saving failed.')
+      }
     } catch (err: any) {
       setError(err.message ?? 'Could not reach the pump prediction API.')
-    } finally { setLoading(false) }
+    } finally {
+      setLoading(false)
+    }
   }
 
-  const statusColor = result?.status === 'NORMAL'
-    ? '#10b981' : result?.status === 'RECOVERING' ? '#f59e0b' : '#ef4444'
+  const statusColor =
+    result?.status === 'NORMAL'
+      ? '#10b981'
+      : result?.status === 'RECOVERING'
+      ? '#f59e0b'
+      : '#ef4444'
 
-  const statusBg = result?.status === 'NORMAL'
-    ? 'rgba(16,185,129,0.1)' : result?.status === 'RECOVERING'
-    ? 'rgba(245,158,11,0.1)' : 'rgba(239,68,68,0.1)'
+  const statusBg =
+    result?.status === 'NORMAL'
+      ? 'rgba(16,185,129,0.1)'
+      : result?.status === 'RECOVERING'
+      ? 'rgba(245,158,11,0.1)'
+      : 'rgba(239,68,68,0.1)'
 
   return (
     <main className="page-root">
@@ -90,6 +107,7 @@ export default function PumpPage({ onBack }: Props) {
           <button onClick={onBack} className="back-btn">
             <ArrowLeft size={18} /> Back
           </button>
+
           <div className="page-header-text">
             <div className="page-badge pump-badge">
               <Activity size={12} /> PUMP DIAGNOSTICS
@@ -103,7 +121,9 @@ export default function PumpPage({ onBack }: Props) {
         <div className="card">
           <form onSubmit={handleSubmit}>
             <h2 className="section-title">Sensor Readings</h2>
-            <p className="section-sub">Enter values for the key sensors below (others default to median)</p>
+            <p className="section-sub">
+              Enter values for the key sensors below (others default to median)
+            </p>
 
             <div className="sensors-grid">
               {sensorFields.map(({ key, label, placeholder }) => (
@@ -126,12 +146,37 @@ export default function PumpPage({ onBack }: Props) {
 
             <button type="submit" disabled={loading} className="submit-btn pump-btn">
               {loading ? (
-                <><span className="spin"><Minus size={18}/></span> Analyzing Pump...</>
+                <>
+                  <span className="spin">
+                    <Minus size={18} />
+                  </span>{' '}
+                  Analyzing Pump...
+                </>
               ) : (
-                <><Send size={18}/> Run Fault Detection</>
+                <>
+                  <Send size={18} /> Run Fault Detection
+                </>
               )}
             </button>
           </form>
+        </div>
+
+        {/* HISTORY LINK (ADDED SAME AS TURBINE) */}
+        <div style={{ textAlign: 'center', margin: '20px 0 30px' }}>
+          <Link
+            href="/pump/history"
+            style={{
+              color: '#60a5fa',
+              textDecoration: 'none',
+              fontSize: '15px',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+            }}
+          >
+            <LinkIcon size={16} />
+            View Prediction History →
+          </Link>
         </div>
 
         {/* Result */}
@@ -140,13 +185,24 @@ export default function PumpPage({ onBack }: Props) {
             <h2 className="section-title">Prediction Result</h2>
 
             <div className="result-status-row">
-              <div className="status-badge" style={{ background: statusBg, color: statusColor, borderColor: statusColor + '55' }}>
+              <div
+                className="status-badge"
+                style={{
+                  background: statusBg,
+                  color: statusColor,
+                  borderColor: statusColor + '55',
+                }}
+              >
                 {result.status}
               </div>
+
               <div className="status-meta">
                 <span className="meta-label">Confidence</span>
-                <span className="meta-value" style={{ color: statusColor }}>{result.confidence}%</span>
+                <span className="meta-value" style={{ color: statusColor }}>
+                  {result.confidence}%
+                </span>
               </div>
+
               <div className="status-meta">
                 <span className="meta-label">Risk Level</span>
                 <span className="meta-value">{result.risk_level}</span>
@@ -154,10 +210,22 @@ export default function PumpPage({ onBack }: Props) {
             </div>
 
             <div className="confidence-bar-wrap">
-              <div className="confidence-bar" style={{ width: `${result.confidence}%`, background: statusColor }} />
+              <div
+                className="confidence-bar"
+                style={{
+                  width: `${result.confidence}%`,
+                  background: statusColor,
+                }}
+              />
             </div>
 
-            <div className="recommendation-box" style={{ borderColor: statusColor + '33', background: statusBg }}>
+            <div
+              className="recommendation-box"
+              style={{
+                borderColor: statusColor + '33',
+                background: statusBg,
+              }}
+            >
               <p className="rec-label">Recommendation</p>
               <p className="rec-text">{result.recommendation}</p>
             </div>

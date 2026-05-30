@@ -482,7 +482,97 @@ VALUES (%s, %s, %s, %s)
         return jsonify({"error": str(e)}), 500
     
 
-    
+@app.route("/pump-history")
+def pump_history():
+
+    cursor.execute("""
+        SELECT * FROM pump_predictions
+        ORDER BY created_at DESC
+    """)
+
+    rows = cursor.fetchall()
+
+    result = []
+
+    for row in rows:
+        result.append({
+            "id": row[0],
+            "prediction": row[1],
+            "confidence": row[2],
+            "risk_level": row[3],
+            "created_at": str(row[5])
+        })
+
+    return jsonify(result)
+
+@app.route("/compressor-history")
+def compressor_history():
+
+    cursor.execute("""
+        SELECT * FROM compressor_predictions
+        ORDER BY created_at DESC
+    """)
+
+    rows = cursor.fetchall()
+
+    result = []
+
+    for row in rows:
+        result.append({
+            "id": row[0],
+            "prediction": row[1],
+            "confidence": row[2],
+            "risk_level": row[3],
+            "created_at": str(row[5])
+        })
+
+    return jsonify(result)
+
+@app.route("/motor-history")
+def motor_history():
+
+    cursor.execute("""
+        SELECT * FROM motor_predictions
+        ORDER BY created_at DESC
+    """)
+
+    rows = cursor.fetchall()
+
+    result = []
+
+    for row in rows:
+        result.append({
+            "id": row[0],
+            "prediction": row[1],
+            "confidence": row[2],
+            "risk_level": row[3],
+            "created_at": str(row[5])
+        })
+
+    return jsonify(result)  
+
+@app.route("/turbine-history")
+def turbine_history():
+
+    cursor.execute("""
+        SELECT * FROM turbine_predictions
+        ORDER BY created_at DESC
+    """)
+
+    rows = cursor.fetchall()
+
+    result = []
+
+    for row in rows:
+        result.append({
+            "id": row[0],
+            "prediction": row[1],
+            "confidence": row[2],
+            "risk_level": row[3],
+            "created_at": str(row[5])
+        })
+
+    return jsonify(result)
 
 # ══════════════════════════════════════════════════════════════════════════════
 # RUN
